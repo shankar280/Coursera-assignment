@@ -1,0 +1,34 @@
+#include <EEPROM.h>
+void setup()
+{
+Serial.begin(9600);
+}
+int addr;
+int okay;
+
+void loop()
+{
+String buffer = "";
+buffer = Serial.readString();
+
+if(buffer.startsWith("Read"))
+{
+addr = buffer.substring(buffer.indexOf(' ') + 1).toInt();
+Serial.print("Reading from address:");
+Serial.print(addr);
+Serial.println();
+Serial.println(EEPROM.read(addr));
+}
+else if(buffer.startsWith("Write"))
+{
+addr = buffer.substring(6,7).toInt();
+okay = buffer.substring(8).toInt();
+Serial.print("Let's Write:");
+Serial.print(okay);
+Serial.println();
+Serial.print("Destination address:");
+Serial.print(addr);
+Serial.println();
+EEPROM.write(addr,okay);
+}
+}

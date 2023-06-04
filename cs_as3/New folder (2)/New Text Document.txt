@@ -1,0 +1,46 @@
+#include<EEPROM.h>
+
+void setup()
+{
+Serial.begin(9600);
+}
+
+void loop() {
+
+while (Serial.available() > 0)
+{
+int Val1=Serial.read();
+int read=Serial.parseInt();
+int Wr1=Serial.parseInt();
+
+
+if(read>1024)
+{
+Serial.println("EEPROM Location must be between 0 and 1023");
+break;
+}
+
+if(Wr1>255)
+{
+Serial.println("Stored value must be less than or equal to 255");
+break;
+}
+
+if (Val1=='r')
+{
+Serial.print("Value read from location ");
+Serial.println(read);
+Serial.println(EEPROM.read(read), DEC);
+}
+
+
+if(Val1=='w')
+{
+EEPROM.write(read, Wr1);
+Serial.print("Writing EEPROM Location = ");
+Serial.println(read);
+Serial.print("Writing Value ");
+Serial.println(Wr1);
+}
+}
+}

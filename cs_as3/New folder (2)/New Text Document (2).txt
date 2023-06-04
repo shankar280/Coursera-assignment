@@ -1,0 +1,41 @@
+#include <EEPROM.h>
+
+// these defines are used to select read or write command,
+// the number signifies the index of the space after read(4 letters) or write (5 letters)
+#define CMD_READ 4
+#define CMD_WRITE 5
+
+// the user input from serial monitor is stored here:
+String userInput = "";
+int cmd,address;
+byte value;
+
+void setup() {
+// initialize serial connection at 9600 baud and print instructions
+Serial.begin(9600);
+Serial.println("--- start assignment EEPROM Sketch ---");
+Serial.println();
+Serial.println("type read <0..1023> or write <0..1023> <0..255>");
+}
+
+void loop() {
+// if data is available from the serial monitor
+if (Serial.available() > 0)
+{
+userInput = Serial.readString();
+cmd = userInput.indexOf(" ");
+address = userInput.substring(cmd,userInput.lastIndexOf(" ")).toInt();
+switch(cmd) {
+case CMD_READ:
+address = userInput.substring(cmd).toInt();
+Serial.println("the contents of address " + userInput.substring(cmd) + EEPROM.read(address));
+break;
+case CMD_WRITE:
+address = userInput.substring(cmd,userInput.lastIndexOf(" ")).toInt();
+value = userInput.substring(userInput.lastIndexOf(" ")).toInt();
+Serial.println("writing value " + userInput.substring(userInput.lastIndexOf(" ")) + " to address " + userInput.substring(cmd,userInput.lastIndexOf(" ")));
+EEPROM.write(address,value);
+}
+}
+
+}
